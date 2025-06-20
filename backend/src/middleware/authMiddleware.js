@@ -24,8 +24,8 @@ const authMiddleware = (req, res, next) => {
 			_id: decoded.id,
 		};
 
-		        console.log("User object on request:", req.user);
-		
+		console.log("User object on request:", req.user);
+
 		next();
 	} catch (error) {
 		console.error(error, "Auth error");
