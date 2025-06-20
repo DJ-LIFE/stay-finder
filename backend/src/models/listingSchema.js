@@ -13,7 +13,7 @@ const listingSchema = new mongoose.Schema({
 		city: String,
 		state: String,
 		country: String,
-		coordinates: [longitude, latitude],
+		coordinates: [Number, Number],
 	},
 	price: Number,
 	images: [String], // URLs
