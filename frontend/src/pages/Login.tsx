@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import { userApi } from "../api/api";
 import { useAuthStore } from "../store";
-import { useEffect } from "react";
 
 const loginSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),

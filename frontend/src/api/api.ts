@@ -43,4 +43,8 @@ export const listingApi = {
 		const res = await api.get("/listings");
 		return res.data;
 	},
+	getListingById: async (id: string) => {
+		const res = await api.get(`/listings/${id}`);
+		return res.data;
+	},
 };

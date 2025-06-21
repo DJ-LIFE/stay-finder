@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { listingApi } from "../api/api";
+import { useNavigate } from "react-router";
 
 interface Listings {
 	_id: string;
@@ -8,10 +9,12 @@ interface Listings {
 	images: string[];
 	propertyType: string;
 	price: number;
+	onClick: () => void;
 }
 const Listings = () => {
 	const [listings, setListings] = useState<Listings[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchListings = async () => {
@@ -43,6 +46,7 @@ const Listings = () => {
 					key={listing._id}
 					{...listing}
 					img={listing.images[listing.images.length - 1]}
+					onClick={() => navigate(`/listings/${listing._id}`)}
 				/>
 			))}
 		</div>
@@ -51,9 +55,12 @@ const Listings = () => {
 
 export default Listings;
 
-const Card = ({ title, img, propertyType, price }: Listings) => {
+const Card = ({ title, img, propertyType, price, onClick }: Listings) => {
 	return (
-		<div className="flex flex-col rounded-lg  cursor-pointer">
+		<div
+			className="flex flex-col rounded-lg  cursor-pointer"
+			onClick={onClick}
+		>
 			<div className="relative">
 				<img
 					src={img}
