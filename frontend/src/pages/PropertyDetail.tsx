@@ -1,50 +1,12 @@
-// "data": {
-//         "location": {
-//             "address": "123 Ocean Drive",
-//             "city": "Mumbai",
-//             "state": "Maharashtra",
-//             "country": "India",
-//             "coordinates": [
-//                 72.8777,
-//                 19.076
-//             ]
-//         },
-//         "_id": "6855e8c35edd0c43f617fb2d",
-//         "hostId": {
-//             "_id": "6855d654bdfb2203fac977d4",
-//             "email": "john@gmail.com",
-//             "name": "John Desuza"
-//         },
-//         "title": "Luxury Apartment in Mumbai",
-//         "description": "A beautiful apartment with sea view",
-//         "price": 2500,
-//         "images": [
-//             "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"
-//         ],
-//         "amenities": [
-//             "WiFi",
-//             "Pool",
-//             "Kitchen",
-//             "Air conditioning"
-//         ],
-//         "maxGuests": 4,
-//         "bedrooms": 2,
-//         "bathrooms": 2,
-//         "propertyType": "Apartment",
-//         "availability": true,
-//         "createdAt": "2025-06-20T23:03:31.784Z",
-//         "updatedAt": "2025-06-20T23:03:31.784Z",
-//         "__v": 0
-//     }
-
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { listingApi } from "../api/api";
+import { bookingApi, listingApi } from "../api/api";
 import type { PropertyDetailsProps } from "../types";
 import Loading from "../components/Loading";
 import { useCrousal } from "../hooks/useCrousal";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import useIsMobile from "../hooks/useMobileHook";
+import { BookingCard } from "../components/BookingCard";
 
 const PropertyDetail = () => {
 	const [propertyDetails, setPropertyDetails] =
@@ -96,73 +58,125 @@ const PropertyDetail = () => {
 				)
 		);
 	};
-
 	console.log("propertyDetails", propertyDetails);
 	return (
-		<div className="container transition-all duration-200 ease-in-out mx-auto p-4">
-			<div>
-				<h1 className="text-2xl font-bold my-5">
-					{propertyDetails?.title}
-				</h1>
-				{isMobile ? (
-					<div className="relative">
-						<button
-							onClick={prevImage}
-							className={`${
-								currentIndex === 0 ? "hidden" : ""
-							} absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer`}
-						>
-							<ArrowLeft className="text-neutral-800 bg-transparent rounded-full p-1" />
-						</button>
-						<img
-							src={currentImage}
-							alt=""
-							className="rounded-2xl"
-						/>
-						<button
-							onClick={nextImage}
-							className={`${
-								currentIndex === totalImagesCount - 1
-									? "hidden"
-									: ""
-							} absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer`}
-						>
-							<ArrowRight className="text-neutral-800 bg-transparent rounded-full p-1" />
-						</button>
-						<p className="absolute bottom-4 right-5 text-xs px-2 py-0.5 rounded-sm bg-black bg-opacity-20 text-white text-opacity-100">
-							{currentImageCount} / {totalImagesCount}
-						</p>
-					</div>
-				) : (
-					<div className="grid grid-cols-2 gap-4 shadow-xs bg-transparent rounded-2xl overflow-clip">
-						<img
-							src={currentImage}
-							alt=""
-							className="object-cover h-full m-0 cursor-pointer hover:shadow-2xl hover:scale-101 transition-transform duration-300 ease-in-out"
-						/>
-						<div className="grid grid-cols-2 gap-4 rounded-r-2xl p-0 w-full h-full">
-							{renderImages()}
+		<>
+			<div className="container transition-all duration-200 ease-in-out mx-auto p-4 pb-20">
+				<div>
+					{isMobile ? (
+						<div className="relative">
+							<button
+								onClick={prevImage}
+								className={`${
+									currentIndex === 0 ? "hidden" : ""
+								} absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer`}
+							>
+								<ArrowLeft className="text-neutral-800 bg-transparent rounded-full p-1" />
+							</button>
+							<img
+								src={currentImage}
+								alt=""
+								className="rounded-2xl"
+							/>
+							<button
+								onClick={nextImage}
+								className={`${
+									currentIndex === totalImagesCount - 1
+										? "hidden"
+										: ""
+								} absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer`}
+							>
+								<ArrowRight className="text-neutral-800 bg-transparent rounded-full p-1" />
+							</button>
+							<p className="absolute bottom-4 right-5 text-xs px-2 py-0.5 rounded-sm bg-black bg-opacity-20 text-white text-opacity-100">
+								{currentImageCount} / {totalImagesCount}
+							</p>
 						</div>
+					) : (
+						<div className="grid grid-cols-2 gap-4 shadow-xs bg-transparent rounded-2xl overflow-clip">
+							<img
+								src={currentImage}
+								alt=""
+								className="object-cover h-full m-0 cursor-pointer hover:shadow-2xl hover:scale-101 transition-transform duration-300 ease-in-out"
+							/>
+							<div className="grid grid-cols-2 gap-4 rounded-r-2xl p-0 w-full h-full">
+								{renderImages()}
+							</div>
+						</div>
+					)}
+					<div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-8">
+						<div>
+							<h1 className="text-2xl font-semibold my-5">
+								{propertyDetails?.title}
+							</h1>
+							<p className="mt-2 text-neutral-600 text-balance text-sm">
+								{propertyDetails?.description}
+							</p>
+
+							<p className="text-base font-semibold border-b border-neutral-300 py-2 pb-4">
+								Hosted By {propertyDetails?.hostId.name}
+							</p>
+							{/* <p>{propertyDetails?.hostId.email}</p> */}
+							<div>
+								{propertyDetails?.amenities && (
+									<div className="mt-4">
+										<h2 className="text-xl font-medium">
+											What this place offers
+										</h2>
+										<ul className="pl-5">
+											{propertyDetails.amenities.map(
+												(amenity, index) => (
+													<li
+														key={index}
+														className="text-neutral-600 text-sm "
+													>
+														{amenity}
+													</li>
+												)
+											)}
+										</ul>
+									</div>
+								)}
+							</div>
+							<div className="mt-4">
+								<h2 className="text-xl font-semibold">
+									Location
+								</h2>
+								<p>{propertyDetails?.location.address}</p>
+								<p>
+									{propertyDetails?.location.city},{" "}
+									{propertyDetails?.location.state},{" "}
+									{propertyDetails?.location.country}
+								</p>
+							</div>
+						</div>
+						<BookingCard price={propertyDetails?.price} id={id} />
 					</div>
-				)}
-				<p className="mt-2">{propertyDetails?.description}</p>
-				<p className="mt-2">Price: ${propertyDetails?.price}</p>
-				<div className="mt-4">
-					<h2 className="text-xl font-semibold">Location</h2>
-					<p>{propertyDetails?.location.address}</p>
-					<p>
-						{propertyDetails?.location.city},{" "}
-						{propertyDetails?.location.state},{" "}
-						{propertyDetails?.location.country}
-					</p>
-				</div>
-				<div className="mt-4">
-					<h2 className="text-xl font-semibold">Host</h2>
-					<p>{propertyDetails?.hostId.name}</p>
-					<p>{propertyDetails?.hostId.email}</p>
 				</div>
 			</div>
-		</div>
+			<div className="md:hidden fixed bottom-0 z-50 bg-white px-4 w-full py-4 my-4">
+				<div className="flex justify-between items-center ">
+					<p>
+						<span className="text-sm text-neutral-500 line-through">
+							₹
+							{propertyDetails?.price
+								? propertyDetails.price +
+								  propertyDetails.price * 0.25
+								: ""}
+						</span>
+						<span className="pl-1 underline">
+							₹{propertyDetails?.price || 0}
+						</span>
+					</p>
+					<button
+						type="submit"
+						className=" rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer"
+					>
+						Book Now
+					</button>
+				</div>
+			</div>
+		</>
 	);
 };
 

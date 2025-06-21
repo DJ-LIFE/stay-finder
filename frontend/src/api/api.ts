@@ -10,7 +10,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-	const token = localStorage.getItem("adminToken");
+	const token = localStorage.getItem("token");
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`;
 	}
@@ -45,6 +45,25 @@ export const listingApi = {
 	},
 	getListingById: async (id: string) => {
 		const res = await api.get(`/listings/${id}`);
+		return res.data;
+	},
+};
+
+export const bookingApi = {
+	booking: async (
+		listingId: string,
+		startDate: string,
+		endDate: string,
+		guests: number,
+		totalPrice: number
+	) => {
+		const res = await api.post("/booking", {
+			listingId,
+			startDate,
+			endDate,
+			guests,
+			totalPrice,
+		});
 		return res.data;
 	},
 };
