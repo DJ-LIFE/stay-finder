@@ -39,6 +39,12 @@ const signup = async (req, res) => {
 			success: true,
 			message: "User created successfully",
 			token,
+			user: {
+				id: user._id,
+				email: user.email,
+				role: user.role,
+				name: user.name,
+			},
 		});
 	} catch (error) {
 		console.error(error);
@@ -71,7 +77,16 @@ const signin = async (req, res) => {
 			{ expiresIn: "1h" }
 		);
 		res.cookie("token", token, { httpOnly: true, secure: true });
-		res.status(200).json({ message: "User signed in successfully", token });
+		res.status(200).json({
+			message: "User signed in successfully",
+			token,
+			user: {
+				id: user._id,
+				email: user.email,
+				role: user.role,
+				name: user.name,
+			},
+		});
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: "Internal server error" });

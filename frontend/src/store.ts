@@ -1,13 +1,25 @@
 import { create } from "zustand";
-
+// "user": {
+//         "id": "6855d654bdfb2203fac977d4",
+//         "email": "john@gmail.com",
+//         "role": "host",
+//         "name": "John Desuza"
+//     }
+interface User {
+	id: string;
+	email: string;
+	role: "host" | "guest";
+	name: string;
+}
 interface AuthState {
 	role: "host" | "guest";
 	token: string | null;
 	isAuthenticated: boolean;
 	isLoading: boolean;
+	user?: User; // Optional user object to store user details
 
-	login: (role: "host" | "guest", token: string) => void;
-	signup: (role: "host" | "guest", token: string) => void;
+	login: (role: "host" | "guest", token: string, user: User) => void;
+	signup: (role: "host" | "guest", token: string, user: User) => void;
 	logout: () => void;
 	setLoading: (loading: boolean) => void;
 	initializeAuth: () => void;
@@ -18,25 +30,26 @@ export const useAuthStore = create<AuthState>((set) => ({
 	isAuthenticated: false,
 	isLoading: false,
 
-	login: (role: "host" | "guest", token: string) => {
+	login: (role: "host" | "guest", token: string, user: User) => {
 		localStorage.setItem("token", token);
-		localStorage.setItem("role", role);
-		set({ role, token, isAuthenticated: true });
+		localStorage.setItem("user", JSON.stringify(user));
+		set({ role, token, isAuthenticated: true, user });
 	},
 
-	signup: (role: "host" | "guest", token: string) => {
+	signup: (role: "host" | "guest", token: string, user: User) => {
 		localStorage.setItem("token", token);
-		localStorage.setItem("role", role);
-		set({ role, token, isAuthenticated: true });
+		localStorage.setItem("user", JSON.stringify(user));
+		set({ role, token, isAuthenticated: true, user });
 	},
 
 	logout: () => {
 		localStorage.removeItem("token");
-		localStorage.removeItem("role");
+		localStorage.removeItem("user");
 		set({
 			role: "guest",
 			token: null,
 			isAuthenticated: false,
+			user: undefined,
 		});
 	},
 
@@ -48,8 +61,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 		set({ isLoading: true });
 		const token = localStorage.getItem("token");
 		const role = localStorage.getItem("role") as "host" | "guest" | null;
+		const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
 		if (token && role) {
-			set({ role, token, isAuthenticated: true, isLoading: false });
+			set({ role, token, isAuthenticated: true, isLoading: false, user });
 		} else {
 			set({
 				role: "guest",

@@ -36,6 +36,10 @@ export const userApi = {
 		});
 		return res.data;
 	},
+	getProfile: async () => {
+		const res = await api.get("/profile");
+		return res.data;
+	}
 };
 
 export const listingApi = {

@@ -38,7 +38,7 @@ export const Login = () => {
 		try {
 			setLoading(true);
 			const res = await userApi.login(data.email, data.password);
-			login(res.role, res.token);
+			login(res.role, res.token, res.user);
 		} catch (error) {
 			console.error("Login failed:", error);
 		} finally {

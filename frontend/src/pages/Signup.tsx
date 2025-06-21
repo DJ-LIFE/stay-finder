@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { useAuthStore } from "../store";
 import { userApi } from "../api/api";
 import AuthLayout from "../layout/AuthLayout";
+import Loading from "../components/Loading";
 
 const signupSchema = z
 	.object({
@@ -62,7 +63,7 @@ export const Signup = () => {
 				data.name,
 				data.role
 			);
-			signup(res.role, res.token);
+			signup(res.role, res.token, res.user);
 		} catch (error) {
 		} finally {
 			setTimeout(() => {
@@ -71,7 +72,9 @@ export const Signup = () => {
 			}, 1000);
 		}
 	};
-
+	if (isLoading) {
+		<Loading />;
+	}
 	const setRole = (role: "host" | "guest") => {
 		setValue("role", role);
 	};
