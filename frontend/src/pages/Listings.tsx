@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { listingApi } from "../api/api";
 import { useNavigate } from "react-router";
 import SearchBar from "../components/SearchBar";
+import Loading from "../components/Loading";
 
 interface Listings {
 	_id: string;
@@ -35,19 +36,18 @@ const Listings = () => {
 	}, []);
 	console.log("listings", listings);
 	if (loading) {
-		return (
-			<div className="flex items-center justify-center min-h-screen">
-				<div className="loader bg-red-500 text-white">Loading ...</div>
-			</div>
-		);
+		return <Loading />;
 	}
-	const filteredListings = listings.filter((listing) =>
+	const filteredListings = listings?.filter((listing) =>
 		listing.title.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 	return (
 		<div>
 			<div className="container mx-auto p-4">
-				<SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+				<SearchBar
+					searchQuery={searchQuery}
+					setSearchQuery={setSearchQuery}
+				/>
 			</div>
 			<div className="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-10">
 				{filteredListings.map((listing) => (
