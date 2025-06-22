@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { listingApi } from "../api/api";
 import { useNavigate } from "react-router";
+import SearchBar from "../components/SearchBar";
 
 interface Listings {
 	_id: string;
@@ -14,6 +15,7 @@ interface Listings {
 const Listings = () => {
 	const [listings, setListings] = useState<Listings[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [searchQuery, setSearchQuery] = useState<string>("");
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -39,16 +41,24 @@ const Listings = () => {
 			</div>
 		);
 	}
+	const filteredListings = listings.filter((listing) =>
+		listing.title.toLowerCase().includes(searchQuery.toLowerCase())
+	);
 	return (
-		<div className="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-10">
-			{listings.map((listing) => (
-				<Card
-					key={listing._id}
-					{...listing}
-					img={listing.images[listing.images.length - 1]}
-					onClick={() => navigate(`/listings/${listing._id}`)}
-				/>
-			))}
+		<div>
+			<div className="container mx-auto p-4">
+				<SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+			</div>
+			<div className="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-10">
+				{filteredListings.map((listing) => (
+					<Card
+						key={listing._id}
+						{...listing}
+						img={listing.images[listing.images.length - 1]}
+						onClick={() => navigate(`/listings/${listing._id}`)}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

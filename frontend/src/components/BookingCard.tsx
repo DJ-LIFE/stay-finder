@@ -95,17 +95,18 @@ export const BookingCard = ({
 
 		try {
 			setIsSubmitting(true);
+            const guestsCount = Number(data.guests);
+            console.log(typeof guestsCount, "guestsCount");
 			const response = await bookingApi.booking(
 				id,
 				data.checkIn,
 				data.checkOut,
-				data.guests,
+				guestsCount,
 				totalPrice
 			);
 
 			console.log("Booking successful:", response);
 			setBookingSuccess(true);
-
 		} catch (error) {
 			console.error("Booking failed:", error);
 		} finally {
@@ -120,13 +121,24 @@ export const BookingCard = ({
 					<h3 className="text-xl font-semibold text-green-600">
 						Booking Successful!
 					</h3>
-					
 				</div>
 			</div>
 		);
 	}
+	if (isSubmitting) {
+		return (
+			<div className="px-4 w-full py-8 my-4 max-w-100 rounded-2xl shadow-2xl">
+				<div className="text-center">
+					<h3 className="text-xl font-semibold">
+						Processing your booking...
+					</h3>
+				</div>
+			</div>
+		);
+	}
+    console.log(typeof guests, "guests");
 	return (
-		<div className="px-4 w-full py-8 my-4 max-w-100 rounded-2xl shadow-2xl">
+		<div className="px-4 w-full py-8 my-4 max-w-100 rounded-2xl shadow-lg">
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex flex-col items-start gap-8"
@@ -153,6 +165,11 @@ export const BookingCard = ({
 							id="check-in"
 							className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
 						/>
+						{errors.checkIn && (
+							<span className="text-red-500 text-sm">
+								{errors.checkIn.message}
+							</span>
+						)}
 					</div>
 					<div className="flex flex-col gap-2">
 						<label
@@ -167,6 +184,11 @@ export const BookingCard = ({
 							id="check-out"
 							className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
 						/>
+						{errors.checkOut && (
+							<span className="text-red-500 text-sm">
+								{errors.checkOut.message}
+							</span>
+						)}
 					</div>
 				</div>
 				<div className="flex flex-col gap-2 w-full">
@@ -178,12 +200,17 @@ export const BookingCard = ({
 					</label>
 					<input
 						{...register("guests")}
-						type="number"
+						type="text"
 						id="guests"
 						min={1}
 						defaultValue={1}
 						className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
 					/>
+					{errors.guests && (
+						<span className="text-red-500 text-sm">
+							{errors.guests.message}
+						</span>
+					)}
 				</div>
 
 				<button

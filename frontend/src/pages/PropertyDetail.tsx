@@ -1,19 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { bookingApi, listingApi } from "../api/api";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { listingApi } from "../api/api";
 import type { PropertyDetailsProps } from "../types";
 import Loading from "../components/Loading";
 import { useCrousal } from "../hooks/useCrousal";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import useIsMobile from "../hooks/useMobileHook";
 import { BookingCard } from "../components/BookingCard";
+import { Map } from "../components/Map";
 
 const PropertyDetail = () => {
 	const [propertyDetails, setPropertyDetails] =
 		useState<PropertyDetailsProps | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [popup, setPopup] = useState<boolean>(false);
-	const navigate = useNavigate();
 	const { id } = useParams();
 
 	const {
@@ -143,12 +143,24 @@ const PropertyDetail = () => {
 								<h2 className="text-xl font-semibold">
 									Location
 								</h2>
-								<p>{propertyDetails?.location.address}</p>
-								<p>
+								<p className="text-neutral-600 text-sm">
+									{propertyDetails?.location.address}
 									{propertyDetails?.location.city},{" "}
 									{propertyDetails?.location.state},{" "}
 									{propertyDetails?.location.country}
 								</p>
+
+								<Map
+									coordinates={{
+										lat:
+											propertyDetails?.location
+												.coordinates[0] || 0,
+										lng:
+											propertyDetails?.location
+												.coordinates[1] || 0,
+									}}
+									name={propertyDetails?.title || "Property"}
+								/>
 							</div>
 						</div>
 						<div className="hidden md:block">
@@ -159,7 +171,7 @@ const PropertyDetail = () => {
 						</div>
 						{popup && (
 							<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-								<div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+								<div className="bg-white p-6 rounded-lg shadow-sm w-full max-w-md">
 									<BookingCard
 										price={propertyDetails?.price}
 										id={id}
