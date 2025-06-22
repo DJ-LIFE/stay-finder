@@ -40,7 +40,7 @@ const Listings = () => {
 		);
 	}
 	return (
-		<div className="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+		<div className="container mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-10">
 			{listings.map((listing) => (
 				<Card
 					key={listing._id}

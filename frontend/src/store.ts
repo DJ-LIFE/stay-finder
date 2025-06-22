@@ -58,18 +58,31 @@ export const useAuthStore = create<AuthState>((set) => ({
 	},
 
 	initializeAuth: () => {
+		const currentState = useAuthStore.getState();
+
+		if(currentState.isAuthenticated) {
+			return;
+		}
 		set({ isLoading: true });
 		const token = localStorage.getItem("token");
-		const role = localStorage.getItem("role") as "host" | "guest" | null;
-		const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
-		if (token && role) {
-			set({ role, token, isAuthenticated: true, isLoading: false, user });
+		const user = localStorage.getItem("user")
+			? JSON.parse(localStorage.getItem("user")!)
+			: null;
+		if (token && user) {
+			set({
+				token,
+				isAuthenticated: true,
+				isLoading: false,
+				user,
+				role: user.role, 
+			});
 		} else {
 			set({
 				role: "guest",
 				token: null,
 				isAuthenticated: false,
 				isLoading: false,
+				user: undefined,
 			});
 		}
 	},

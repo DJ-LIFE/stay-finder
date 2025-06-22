@@ -21,3 +21,23 @@ export interface PropertyDetailsProps {
 		email: string;
 	};
 }
+
+export interface CreateListingsProps {
+	title: string;
+	description: string;
+	location: {
+		address: string;
+		city: string;
+		state: string;
+		country: string;
+		coordinates: [number, number];
+	};
+	price: number;
+	images: string[];
+	amenities: string[];
+	maxGuests: number;
+	bedrooms: number;
+	bathrooms: number;
+	propertyType: string;
+	availability: boolean;
+}

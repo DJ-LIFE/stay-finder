@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import { bookingApi } from "../api/api";
 const bookingSchema = z
 	.object({
@@ -50,7 +49,6 @@ export const BookingCard = ({
 }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [bookingSuccess, setBookingSuccess] = useState(false);
-	const navigate = useNavigate();
 
 	const {
 		register,

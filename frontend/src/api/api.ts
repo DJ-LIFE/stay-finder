@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { CreateListingsProps } from "../types";
 const API_BASE_URL =
 	import.meta.env.API_BASE_URL || "http://localhost:8081/api";
 
@@ -39,7 +40,7 @@ export const userApi = {
 	getProfile: async () => {
 		const res = await api.get("/profile");
 		return res.data;
-	}
+	},
 };
 
 export const listingApi = {
@@ -49,6 +50,10 @@ export const listingApi = {
 	},
 	getListingById: async (id: string) => {
 		const res = await api.get(`/listings/${id}`);
+		return res.data;
+	},
+	createListings: async (data: CreateListingsProps) => {
+		const res = await api.post("/listings", data);
 		return res.data;
 	},
 };

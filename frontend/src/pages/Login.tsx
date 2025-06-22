@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import { userApi } from "../api/api";
 import { useAuthStore } from "../store";
-import AuthLayout from "../layout/AuthLayout";
 
 const loginSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
@@ -63,8 +62,7 @@ export const Login = () => {
 	// }, []);
 
 	return (
-		<AuthLayout>
-			<div className="container mx-auto p-4 h-screen">
+			<div className="container mx-auto p-4 mt-20">
 				<div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
 					<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 						{/* <img
@@ -156,6 +154,5 @@ export const Login = () => {
 					</div>
 				</div>
 			</div>
-		</AuthLayout>
 	);
 };

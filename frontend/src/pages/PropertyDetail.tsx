@@ -12,6 +12,7 @@ const PropertyDetail = () => {
 	const [propertyDetails, setPropertyDetails] =
 		useState<PropertyDetailsProps | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [popup, setPopup] = useState<boolean>(false);
 	const navigate = useNavigate();
 	const { id } = useParams();
 
@@ -150,7 +151,28 @@ const PropertyDetail = () => {
 								</p>
 							</div>
 						</div>
-						<BookingCard price={propertyDetails?.price} id={id} />
+						<div className="hidden md:block">
+							<BookingCard
+								price={propertyDetails?.price}
+								id={id}
+							/>
+						</div>
+						{popup && (
+							<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+								<div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+									<BookingCard
+										price={propertyDetails?.price}
+										id={id}
+									/>
+									<button
+										className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+										onClick={() => setPopup(false)}
+									>
+										&times;
+									</button>
+								</div>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
@@ -171,6 +193,7 @@ const PropertyDetail = () => {
 					<button
 						type="submit"
 						className=" rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer"
+						onClick={() => setPopup(true)}
 					>
 						Book Now
 					</button>
