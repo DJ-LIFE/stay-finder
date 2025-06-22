@@ -26,7 +26,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<div>
-			<header className="bg-indigo-600">
+			<header className="bg-indigo-600 border-b border-indigo-700">
 				<nav className="container mx-auto px-4 py-4">
 					<div className="flex items-center justify-between">
 						<a

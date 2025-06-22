@@ -62,7 +62,7 @@ const PropertyDetail = () => {
 	console.log("propertyDetails", propertyDetails);
 	return (
 		<>
-			<div className="container transition-all duration-200 ease-in-out mx-auto p-4 pb-20">
+			<div className="container transition-all duration-200 ease-in-out mx-auto p-4 pb-20 mt-10">
 				<div>
 					{isMobile ? (
 						<div className="relative">
